@@ -1,0 +1,37 @@
+# Environment variables
+.env
+.env.test
+.env.local
+.env.*.local
+
+# IDE files
+.idea/
+.vscode/
+
+# Compiled binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+auth_go
+
+# Go specific
+*.test
+*.out
+/vendor/
+/dist/
+
+# Logs
+*.log
+
+# Test results
+/results/
+
+# Sensitive files
+*.pem
+*.key
+*.crt
+*.cert
+*.p12
+*.pfx
