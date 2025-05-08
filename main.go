@@ -81,6 +81,8 @@ func main() {
 	r.GET("/login", routes.LoginPage(db))
 	r.POST("/login", routes.Login(db))
 	r.POST("/token", routes.Token(db))
+	r.POST("/register", routes.Register(db))
+	r.GET("/register", routes.RegisterPage(db))
 	r.GET("/validate", routes.Validate(db))
 
 	// Serve static files
