@@ -22,16 +22,12 @@ func Register(db *db.Db) gin.HandlerFunc {
 		ctx := context.Background()
 
 		user, err := db.Queries.GetUserByEmail(ctx, c.PostForm("email"))
-		if err != nil {
+		if err == nil && user.Email != "" {
 			log.Printf("Error getting user by email: %v", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 			return
 		}
-		if user.Email != "" {
-			log.Printf("User already exists")
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
-			return
-		}
+
 		encodedHash, err := utils.GenerateFromPassword(c.PostForm("password"))
 		if err != nil {
 			log.Printf("Error generating password hash: %v", err)
