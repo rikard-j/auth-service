@@ -17,19 +17,19 @@ func getJWTSecret() ([]byte, error) {
 }
 
 type Claims struct {
-	UserID int64 `json:"user_id"`
+	UserUUID string `json:"user_uuid"`
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(userID int64) (string, error) {
+func GenerateJWT(userUUID string) (string, error) {
 	secret, err := getJWTSecret()
 	if err != nil {
 		return "", err
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id": userID,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(),
+		"user_uuid": userUUID,
+		"exp":       time.Now().Add(time.Hour * 24).Unix(),
 	})
 
 	return token.SignedString(secret)

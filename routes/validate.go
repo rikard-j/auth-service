@@ -27,6 +27,6 @@ func Validate(db *db.Db) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"user_id": claims.UserID})
+		c.JSON(http.StatusOK, gin.H{"user_uuid": claims.UserUUID})
 	}
 }

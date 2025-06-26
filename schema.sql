@@ -8,9 +8,11 @@ CREATE TABLE clients (
 
 CREATE TABLE users (
   id   BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  uuid VARCHAR(36) NOT NULL,
   email VARCHAR(320)    NOT NULL,
   password VARCHAR(191) NOT NULL,
-  UNIQUE (email)
+  UNIQUE (email),
+  UNIQUE (uuid)
 );
 
 CREATE TABLE sessions (

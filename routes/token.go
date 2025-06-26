@@ -66,22 +66,30 @@ func Token(db *db.Db) gin.HandlerFunc {
 			return
 		}
 
-		// 6. Generate access token using the email from the session
-		accessToken, err := utils.GenerateJWT(authSession.UserID.Int64)
+		// 6. Get user information
+		user, err := db.Queries.GetUserByID(context.Background(), authSession.UserID.Int64)
 		if err != nil {
-			log.Printf("Error generating JWT for user %d: %v", authSession.UserID.Int64, err)
+			log.Printf("Error getting user by ID: %v", err)
+			http.Error(c.Writer, "Failed to get user", http.StatusInternalServerError)
+			return
+		}
+
+		// 7. Generate access token using the email from the session
+		accessToken, err := utils.GenerateJWT(user.Uuid)
+		if err != nil {
+			log.Printf("Error generating JWT for user %s: %v", user.Uuid, err)
 			http.Error(c.Writer, "Failed to generate token", http.StatusInternalServerError)
 			return
 		}
 
-		// 7. Delete the authorization session
+		// 8. Delete the authorization session
 		if err := db.Queries.DeleteSession(context.Background(), authSession.AuthCode); err != nil {
 			log.Printf("Error deleting session %s: %v", authSession.AuthCode, err)
 			http.Error(c.Writer, "Failed to clean up session", http.StatusInternalServerError)
 			return
 		}
 
-		// 8. Return the tokens
+		// 9. Return the tokens
 		c.SetCookie(
 			"token",     // name
 			accessToken, // value
