@@ -38,16 +38,17 @@ func (q *Queries) CreateAuthorizeSession(ctx context.Context, arg CreateAuthoriz
 }
 
 const createUser = `-- name: CreateUser :exec
-INSERT INTO users (email, password) VALUES (?, ?)
+INSERT INTO users (email, password, uuid) VALUES (?, ?, ?)
 `
 
 type CreateUserParams struct {
 	Email    string
 	Password string
+	Uuid     string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
-	_, err := q.db.ExecContext(ctx, createUser, arg.Email, arg.Password)
+	_, err := q.db.ExecContext(ctx, createUser, arg.Email, arg.Password, arg.Uuid)
 	return err
 }
 

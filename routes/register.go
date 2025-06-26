@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func Register(db *db.Db) gin.HandlerFunc {
@@ -34,11 +35,14 @@ func Register(db *db.Db) gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 			return
 		}
+
 		db.Queries.CreateUser(ctx, dbcommon.CreateUserParams{
 			Email:    c.PostForm("email"),
 			Password: encodedHash,
+			Uuid:     uuid.New().String(),
 		})
-		c.JSON(http.StatusOK, gin.H{"Email": c.PostForm("email"), "Password": c.PostForm("password")})
+
+		c.JSON(http.StatusOK, gin.H{"status": "User created successfully"})
 	}
 }
 
