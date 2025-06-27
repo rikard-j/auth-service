@@ -31,8 +31,10 @@ type Session struct {
 }
 
 type User struct {
-	ID       int64
-	Uuid     string
-	Email    string
-	Password string
+	ID        int64
+	Uuid      string
+	Email     string
+	Firstname string
+	Lastname  string
+	Password  string
 }

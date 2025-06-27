@@ -85,6 +85,9 @@ func main() {
 	r.GET("/register", routes.RegisterPage(db))
 	r.GET("/validate", routes.Validate(db))
 
+	// User endpoints
+	r.GET("/user/:uuid", routes.GetUserByUUID(db))
+
 	// Serve static files
 	r.Static("/static", "./static")
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Register</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <style>
         body {
@@ -54,23 +54,40 @@
             margin-top: 10px;
             display: none;
         }
+        .name-row {
+            display: flex;
+            gap: 10px;
+        }
+        .name-row .form-group {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
     <div class="form-container">
         <h2>Register</h2>
         <p>Client: {{ .NamespaceName }}</p>
-        <form method="POST" action="/login">
+        <form method="POST" action="/register">
+            <div class="name-row">
+                <div class="form-group">
+                    <label for="firstname">First Name:</label>
+                    <input type="text" id="firstname" name="firstname" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last Name:</label>
+                    <input type="text" id="lastname" name="lastname" required>
+                </div>
+            </div>
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" value="test@timebox.com" required>
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" value="test@timebox.com" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value="testpass"required>
+                <input type="password" id="password" name="password" value="testpass" required>
             </div>
             <input type="hidden" name="namespace_id" value="{{ .NamespaceID }}">
-            <button type="submit">Login</button>
+            <button type="submit">Register</button>
             {{if .Error}}
             <div class="error" style="display: block;">{{.Error}}</div>
             {{else}}

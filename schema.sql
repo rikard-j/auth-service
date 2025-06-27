@@ -10,7 +10,9 @@ CREATE TABLE users (
   id   BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
   uuid VARCHAR(36) NOT NULL,
   email VARCHAR(320)    NOT NULL,
-  password VARCHAR(191) NOT NULL,
+  firstname TEXT NOT NULL,
+  lastname TEXT NOT NULL,
+  password TEXT NOT NULL,
   UNIQUE (email),
   UNIQUE (uuid)
 );

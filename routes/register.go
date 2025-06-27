@@ -15,8 +15,8 @@ import (
 func Register(db *db.Db) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		if c.PostForm("email") == "" || c.PostForm("password") == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Email and password are required"})
+		if c.PostForm("email") == "" || c.PostForm("password") == "" || c.PostForm("firstname") == "" || c.PostForm("lastname") == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Email, password, firstname and lastname are required"})
 			return
 		}
 
@@ -37,9 +37,11 @@ func Register(db *db.Db) gin.HandlerFunc {
 		}
 
 		db.Queries.CreateUser(ctx, dbcommon.CreateUserParams{
-			Email:    c.PostForm("email"),
-			Password: encodedHash,
-			Uuid:     uuid.New().String(),
+			Email:     c.PostForm("email"),
+			Password:  encodedHash,
+			Uuid:      uuid.New().String(),
+			Firstname: c.PostForm("firstname"),
+			Lastname:  c.PostForm("lastname"),
 		})
 
 		c.JSON(http.StatusOK, gin.H{"status": "User created successfully"})

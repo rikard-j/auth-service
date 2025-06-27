@@ -38,17 +38,25 @@ func (q *Queries) CreateAuthorizeSession(ctx context.Context, arg CreateAuthoriz
 }
 
 const createUser = `-- name: CreateUser :exec
-INSERT INTO users (email, password, uuid) VALUES (?, ?, ?)
+INSERT INTO users (email, password, uuid, firstname, lastname) VALUES (?, ?, ?, ?, ?)
 `
 
 type CreateUserParams struct {
-	Email    string
-	Password string
-	Uuid     string
+	Email     string
+	Password  string
+	Uuid      string
+	Firstname string
+	Lastname  string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
-	_, err := q.db.ExecContext(ctx, createUser, arg.Email, arg.Password, arg.Uuid)
+	_, err := q.db.ExecContext(ctx, createUser,
+		arg.Email,
+		arg.Password,
+		arg.Uuid,
+		arg.Firstname,
+		arg.Lastname,
+	)
 	return err
 }
 
@@ -174,7 +182,7 @@ func (q *Queries) GetUserByAuthCode(ctx context.Context, authCode string) (GetUs
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, uuid, email, password FROM users WHERE email = ?
+SELECT id, uuid, email, firstname, lastname, password FROM users WHERE email = ?
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
@@ -184,13 +192,15 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.ID,
 		&i.Uuid,
 		&i.Email,
+		&i.Firstname,
+		&i.Lastname,
 		&i.Password,
 	)
 	return i, err
 }
 
 const getUserByID = `-- name: GetUserByID :one
-SELECT id, uuid, email, password FROM users WHERE id = ?
+SELECT id, uuid, email, firstname, lastname, password FROM users WHERE id = ?
 `
 
 func (q *Queries) GetUserByID(ctx context.Context, id int64) (User, error) {
@@ -200,6 +210,26 @@ func (q *Queries) GetUserByID(ctx context.Context, id int64) (User, error) {
 		&i.ID,
 		&i.Uuid,
 		&i.Email,
+		&i.Firstname,
+		&i.Lastname,
+		&i.Password,
+	)
+	return i, err
+}
+
+const getUserByUUID = `-- name: GetUserByUUID :one
+SELECT id, uuid, email, firstname, lastname, password FROM users WHERE uuid = ?
+`
+
+func (q *Queries) GetUserByUUID(ctx context.Context, uuid string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByUUID, uuid)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Uuid,
+		&i.Email,
+		&i.Firstname,
+		&i.Lastname,
 		&i.Password,
 	)
 	return i, err

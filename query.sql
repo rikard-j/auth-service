@@ -4,8 +4,11 @@ SELECT * FROM users WHERE email = ?;
 -- name: GetUserByID :one
 SELECT * FROM users WHERE id = ?;
 
+-- name: GetUserByUUID :one
+SELECT * FROM users WHERE uuid = ?;
+
 -- name: CreateUser :exec
-INSERT INTO users (email, password, uuid) VALUES (?, ?, ?);
+INSERT INTO users (email, password, uuid, firstname, lastname) VALUES (?, ?, ?, ?, ?);
 
 -- name: GetClientByNamespace :one
 SELECT * FROM clients WHERE namespace = ?;
