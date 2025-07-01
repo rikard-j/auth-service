@@ -86,8 +86,8 @@ func main() {
 	r.GET("/validate", routes.Validate(db))
 
 	// User endpoints
-	r.GET("/user/:uuid", routes.GetUserByUUID(db))
-
+	r.GET("/user/uuid/:uuid", routes.GetUserByUUID(db))
+	r.GET("/user/email/:email", routes.GetUserByEmail(db))
 	// Serve static files
 	r.Static("/static", "./static")
 

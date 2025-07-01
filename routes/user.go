@@ -36,3 +36,27 @@ func GetUserByUUID(db *db.Db) gin.HandlerFunc {
 		})
 	}
 }
+
+func GetUserByEmail(db *db.Db) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		email := c.Param("email")
+		if email == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Email parameter is required"})
+			return
+		}
+
+		user, err := db.Queries.GetUserByEmail(context.Background(), email)
+		if err != nil {
+			log.Printf("Warning: fetching user by email %s: %v", email, err)
+			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"uuid":      user.Uuid,
+			"email":     user.Email,
+			"firstname": user.Firstname,
+			"lastname":  user.Lastname,
+		})
+	}
+}
