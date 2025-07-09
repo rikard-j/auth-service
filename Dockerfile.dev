@@ -1,0 +1,42 @@
+FROM golang:1.24-alpine
+
+# Install git and ca-certificates for go modules
+RUN apk add --no-cache git ca-certificates
+
+WORKDIR /app
+
+# Install air for hot reloading
+RUN go install github.com/air-verse/air@latest
+
+
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Create air configuration
+RUN echo '[build]' > .air.toml && \
+    echo '  cmd = "go build -o ./tmp/main ."' >> .air.toml && \
+    echo '  bin = "tmp/main"' >> .air.toml && \
+    echo '  full_bin = "tmp/main"' >> .air.toml && \
+    echo '  include_ext = ["go", "tpl", "tmpl", "html"]' >> .air.toml && \
+    echo '  exclude_dir = ["tmp"]' >> .air.toml && \
+    echo '  include_dir = []' >> .air.toml && \
+    echo '  exclude_file = []' >> .air.toml && \
+    echo '  delay = 1000' >> .air.toml && \
+    echo '  stop_on_error = true' >> .air.toml && \
+    echo '  log = "air_errors.log"' >> .air.toml && \
+    echo '[log]' >> .air.toml && \
+    echo '  time = true' >> .air.toml && \
+    echo '[color]' >> .air.toml && \
+    echo '  main = "magenta"' >> .air.toml && \
+    echo '  watcher = "cyan"' >> .air.toml && \
+    echo '  build = "yellow"' >> .air.toml && \
+    echo '  runner = "green"' >> .air.toml
+
+# Expose port
+EXPOSE 8080
+
+# Run air for hot reloading
+CMD ["air"] 

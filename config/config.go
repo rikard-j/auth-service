@@ -36,7 +36,10 @@ func loadEnvFile() error {
 
 		key := strings.TrimSpace(parts[0])
 		value := strings.TrimSpace(parts[1])
-		os.Setenv(key, value)
+		// Only set if not already set (Docker env vars take precedence)
+		if os.Getenv(key) == "" {
+			os.Setenv(key, value)
+		}
 	}
 
 	return scanner.Err()
@@ -72,4 +75,4 @@ func getEnvOrDefault(key, defaultValue string) string {
 		return value
 	}
 	return defaultValue
-} 
+}
